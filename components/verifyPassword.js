@@ -4,9 +4,9 @@ const verifyPassword = async (password, salt, storedHashedPassword) => {
     try {
         const hashedPassword = await bcrypt.hash(password, salt);
         if (hashedPassword === storedHashedPassword) {
-            return true; // Passwords match
+            return true; 
         } else {
-            return false; // Passwords don't match
+            return false; 
         }
     } catch (error) {
         throw error;
