@@ -13,7 +13,7 @@ server.post('/register', (req, res) => {
   const { username, email, password } = req.body;
   registerUser(username, email, password, (error, results) => {
     if (error) {
-      let statusCode = 500; // Default status for unexpected errors
+      let statusCode = 500;
       let message = 'Registration failed.';
 
       if (error.message === 'Duplicate username and email found') {
