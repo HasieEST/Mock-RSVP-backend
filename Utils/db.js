@@ -16,4 +16,4 @@ const query = (sql, values, callback) => {
 export {
     connection,
     query
-  };
+};

@@ -2,8 +2,12 @@ import { config } from 'dotenv';
 config();
 import express from 'express';
 
-import registerUser from './components/registerUser.js';
-import loginUser from './components/loginUser.js';
+import registerUser from './Authentication/registerUser.js';
+import loginUser from './Authentication/loginUser.js';
+import authenticateToken from './Authentication/authenticateToken.js';
+import getUserID from './Utils/getUserID.js';
+import createEvent from './Utils/createEvent.js';
+
 
 const server = express();
 
@@ -13,20 +17,14 @@ server.post('/register', (req, res) => {
   const { username, email, password } = req.body;
   registerUser(username, email, password, (error, results) => {
     if (error) {
+      console.log(error)
       let statusCode = 500;
       let message = 'Registration failed.';
 
-      if (error.message === 'Duplicate username and email found') {
+      if (error.message === 'Duplicate username or email found') {
         statusCode = 400;
-        message = 'Duplicate username and email found';
-      } else if (error.message === 'Duplicate username found') {
-        statusCode = 400;
-        message = 'Duplicate username found';
-      } else if (error.message === 'Duplicate email found') {
-        statusCode = 400;
-        message = 'Duplicate email found';
+        message = 'Duplicate username or email found';
       }
-
       res.status(statusCode).send(message);
     } else {
       res.status(200).send('Registration successful.');
@@ -57,6 +55,40 @@ server.post('/login', async (req, res) => {
 });
 
 
+/* todo */
+server.get('/dashboard', authenticateToken, async (req, res) => {
+  try {
+    const username = req.user.username
+    res.status(200).send(username)
+  } catch (err) {
+    res.status(500).json({ message: 'Error retriving events' })
+  }
+});
+
+server.post('/create-event', authenticateToken, async (req, res) => {
+  try {
+    const userID = await getUserID(req.user.username)
+    if (!userID.success) {
+      res.status(401).json({ message: userID.message })
+    } else {
+      console.log(req.body)
+      createEvent(userID, req.body, (error, results) => {
+        if (error) {
+          res.status(500).send('Creating event failed');
+        } else {
+          res.status(200).send('Succesfully created an event.')
+        }
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    if (error.message === 'User not found') {
+      res.status(401).json({ message: error.message })
+    } else {
+      res.status(500).json({ message: error.message })
+    }
+  }
+})
 
 
 const app = server.listen(3006, () => {
