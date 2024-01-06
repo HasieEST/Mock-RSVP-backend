@@ -1,24 +1,15 @@
-import { config } from 'dotenv';
-config();
 import { query } from './db.js';
 
-const createEvent = async (user, body, callback) => {
-    const title = body.title;
-    const date = body.date;
-    const location = body.location;
-    const description = body.description;
-    const sql = 'INSERT INTO event (Title, Date, Location, Description, OrganizerID) VALUES (?, ?, ?, ?, ?)';
-
-    
-    query(sql, [title, date, location, description, user.id], (insertError, results) => {
-        if(insertError) {
-            console.log(insertError)
-             callback(insertError, null)
-        } else {
-            callback(null, results)
-        }
+const createEvent = async (user, body) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO event (Title, Date, Location, Description, OrganizerID) VALUES (?, ?, ?, ?, ?)';
+        query(sql, [body.title, body.date, body.location, body.description, user], (insertError, results) => {
+            if (insertError) {
+                reject({ success: true, message: insertError.sqlMessage });
+            }
+            resolve({ success: true, results })
+        })
     })
 };
-
 
 export default createEvent;

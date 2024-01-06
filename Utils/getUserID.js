@@ -1,5 +1,3 @@
-import { config } from 'dotenv';
-config();
 import { query } from './db.js';
 
 const getUserID = async (user) => {
@@ -7,14 +5,14 @@ const getUserID = async (user) => {
         const sql = 'SELECT idUsers from users where Username = ?';
         query(sql, [user], (error, results) => {
             if (error) {
-                reject({ success: false, message: 'Database error' })
+                reject({ success: false, message: 'Database error: UserID' })
             } else {
                 if (results.length === 1) {
-                    const id = {
+                    const payload = {
                         success: true,
                         id: results[0].idUsers
                     };
-                    resolve(id);
+                    resolve(payload);
                 } else {
                     reject({ success: false, message: 'User not found' })
                 }

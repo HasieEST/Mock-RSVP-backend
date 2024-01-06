@@ -1,4 +1,3 @@
-// Generate a salt and hash a password
 import bcrypt from 'bcrypt';
 
 const generateHashedPassword = async (password) => {
