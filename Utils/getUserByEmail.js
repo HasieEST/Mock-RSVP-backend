@@ -1,8 +1,8 @@
 import { query } from './db.js'
 
-const getUserID = async (user) => {
+const getUserByEmail = async (user) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT idUsers from users where Username = ?'
+        const sql = 'SELECT idUsers FROM users WHERE Email = ?'
         query(sql, [user], (error, results) => {
             if (error) {
                 reject({ success: false, message: 'Database error: UserID' })
@@ -14,11 +14,11 @@ const getUserID = async (user) => {
                     };
                     resolve(payload)
                 } else {
-                    reject({ success: false, message: 'There is no user with that username' })
+                    reject({ success: false, message: 'No user is registered with this email' })
                 }
             }
         })
     })
 }
 
-export default getUserID
+export default getUserByEmail

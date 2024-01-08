@@ -1,4 +1,4 @@
-import { query } from './db.js';
+import { query } from './db.js'
 
 
 const getUserRole = async (userID, eventID) => {
@@ -18,4 +18,4 @@ const getUserRole = async (userID, eventID) => {
     })
 }
 
-export default getUserRole;
+export default getUserRole

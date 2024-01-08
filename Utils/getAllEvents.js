@@ -1,4 +1,4 @@
-import { query } from './db.js';
+import { query } from './db.js'
 
 const getAllEvents = async (user) => {
     return new Promise((resolve, reject) => {
@@ -15,11 +15,11 @@ const getAllEvents = async (user) => {
                     INNER JOIN
                         users u ON e.OrganizerID = u.idUsers
                     WHERE 
-                        e.OrganizerID = ?`;
+                        e.OrganizerID = ?`
 
         query(sql, [user], (error, results) => {
             if (error) {
-                reject({ success: false, message: 'Database query error' });
+                reject({ success: false, message: 'Database query error' })
             } else {
                 const events = results.map(event => ({
                     title: event.eventTitle,
@@ -30,11 +30,12 @@ const getAllEvents = async (user) => {
                 }));
                 if (events.length === 0) {
                     reject({ success: false, message: 'No events found for the user' })
+                } else {
+                    resolve({ success: true, events })
                 }
-                resolve({ success: true, events });
             }
-        });
-    });
-};
+        })
+    })
+}
 
-export default getAllEvents;
+export default getAllEvents

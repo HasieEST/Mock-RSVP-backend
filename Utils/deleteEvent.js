@@ -1,14 +1,15 @@
-import { query } from './db.js';
+import { query } from './db.js'
 
 const deleteEvent = async (eventID) => {
     return new Promise((resolve, reject) => {
-        const sql = 'DELETE FROM event WHERE IdEvent = ?';
+        const sql = 'DELETE FROM event WHERE IdEvent = ?'
         query(sql, [eventID], (deletionError, result) => {
-            if(deletionError){
-                reject({success: false, message: deletionError})
+            if (deletionError) {
+                reject({ success: false, message: deletionError })
+            } else {
+                resolve({ success: true, result })
             }
-            resolve({success: true, result})
-         })
+        })
     })
 }
 

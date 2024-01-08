@@ -1,9 +1,8 @@
-import { query } from './db.js';
-import getUserRole from './getUserRole.js';
+import { query } from './db.js'
 
 const getEvent = async (eventID) => {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT 
+      const sql = `SELECT DISTINCT
                     e.Title as eventTitle,
                     e.Date as eventDateTime,
                     e.Location as eventLocation,
@@ -16,11 +15,11 @@ const getEvent = async (eventID) => {
                   INNER JOIN
                     users u ON e.OrganizerID = u.idUsers
                   WHERE 
-                    e.idEvent = ?`;
+                    e.idEvent = ?`
   
       query(sql, [eventID], (error, results) => {
         if (error) {
-          reject({ success: false, message: 'Database error: event' });
+          reject({ success: false, message: 'Database error: event' })
         } else {
           if (results.length === 1) {
             const eventDetails = {
@@ -30,17 +29,15 @@ const getEvent = async (eventID) => {
               location: results[0].eventLocation,
               host: results[0].host,
               role: results[0].isHostOrModerator,
-            };
-            resolve(eventDetails);
+            }
+            resolve(eventDetails)
           } else {
-            reject({ success: false, message: 'Event not found' });
+            console.log(results)
+            reject({ success: false, message: 'Event not found' })
           }
         }
-      });
-    });
-  };
+      })
+    })
+  }
   
-
-
-export default getEvent;
-
+export default getEvent
