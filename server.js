@@ -1,27 +1,29 @@
 import { config } from 'dotenv'
 config()
 import express from 'express'
+import authenticateToken from './src/Authentication/authenticateToken.js'
 
-import registerUser from './Authentication/registerUser.js'
-import loginUser from './Authentication/loginUser.js'
-import authenticateToken from './Authentication/authenticateToken.js'
-import getUserID from './Utils/getUserID.js'
-import createEvent from './Utils/createEvent.js'
-import getEvent from './Utils/getEvent.js'
-import getUpcomingEvent from './Utils/getUpcomingEvent.js'
-import deleteEvent from './Utils/deleteEvent.js'
-import submitRSVP from './Utils/sumbitRSVP.js'
-import getUserRole from './Utils/getUserRole.js'
-import updateLimitedEventDetails from './Utils/updateLimitedEventDetails.js'
-import updateFullEventDetails from './Utils/updateFullEventDetails.js'
-import getAllEvents from './Utils/getAllEvents.js'
-import isValidEmail from './Utils/isValidEmail.js'
-import getUserByEmail from './Utils/getUserByEmail.js'
-import addModerator from './Utils/addModerator.js'
-import removeModerator from './Utils/removeModerator.js'
+
+import registerUser from './src/Authentication/registerUser.js'
+import loginUser from './src/Authentication/loginUser.js'
+import getUserID from './src/Queries/getUserID.js'
+import getUpcomingEvent from './src/Queries/getUpcomingEvent.js'
+import createEvent from './src/Queries/createEvent.js'
+import getEvent from './src/Queries/getEvent.js'
+import getAllEvents from './src/Queries/getAllEvents.js'
+import getUserRole from './src/Queries/getUserRole.js'
+import updateLimitedEventDetails from './src/Queries/updateLimitedEventDetails.js'
+import updateFullEventDetails from './src/Queries/updateFullEventDetails.js'
+import deleteEvent from './src/Queries/deleteEvent.js'
+import submitRSVP from './src/Queries/submitRSVP.js'
+import addModerator from './src/Queries/addModerator.js'
+import removeModerator from './src/Queries/removeModerator.js'
+import sequelize from './src/Utils/sequalize.js'
+
 
 
 const server = express()
+let app
 
 server.use(express.json())
 
@@ -254,17 +256,17 @@ server.delete('/events/:eventID/removemoderator', authenticateToken, async (req,
     const userExist = await getUserID(req.body.moderator)
     const userRole = await getUserRole(userExist.id)
 
-    if(userExist.success && eventExist.success && role.role === 1 && userRole.role !== 1) {
+    if (userExist.success && eventExist.success && role.role === 1 && userRole.role !== 1) {
       const result = await removeModerator(req.params.eventID, userExist.id)
       res.status(200).json(result)
     }
   } catch (error) {
     let statusCode = 500
-    if(error.message === 'Event not found' || error.message === 'No user is registered with this email' || error.message === 'There is no user with that username'){
+    if (error.message === 'Event not found' || error.message === 'No user is registered with this email' || error.message === 'There is no user with that username') {
       statusCode = 404
     }
-    if(error.message === 'Unauthorized user'){
-      if(typeof UserRole === 'undefined') {
+    if (error.message === 'Unauthorized user') {
+      if (typeof UserRole === 'undefined') {
         statusCode = 404
         error.message = 'This user is not affiliated with this event'
       } else {
@@ -276,9 +278,12 @@ server.delete('/events/:eventID/removemoderator', authenticateToken, async (req,
   }
 })
 
-
-const app = server.listen(3006, () => {
-  console.log('Server started on port 3006')
+sequelize.sync({ alter: true }).then(() => {
+  app = server.listen(3006, () => {
+    console.log('Server started on port 3006')
+  })
+}).catch((error) => {
+  console.error('Unable to sync models with the database: ', error)
 })
 
 export default app
