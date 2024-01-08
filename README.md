@@ -1,6 +1,7 @@
 # RSVP Web Application
 
 This is a mock RSVP web application built with MySQL and Node.js.
+Following branch is non-ORM based.
 
 To access the frontend repository, visit [Frontend Repository URL](URL).
 
