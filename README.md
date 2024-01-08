@@ -17,7 +17,7 @@ To access the frontend repository, visit [Frontend Repository URL](URL).
 To clone this repository, use the following command:
 
 ```bash
-git clone https://github.com/YourUsername/RSVP-Web-Application.git
+git clone https://github.com/HasieEST/Mock-RSVP-backend.git
 
 ```
 
