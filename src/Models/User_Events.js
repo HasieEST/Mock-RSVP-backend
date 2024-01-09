@@ -1,7 +1,9 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../Utils/sequalize.js'
+import Users from './Users.js'
+import Events from './Events.js'
 
-const User_Events = sequelize.define('user_events', {
+const User_Events = sequelize.define('User_Events', {
     IdUser: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -15,8 +17,11 @@ const User_Events = sequelize.define('user_events', {
         allowNull: false,
     }
 }, {
-    tableName: 'user_events',
+    tableName: 'User_Events',
     timestamps: false
 })
+
+Users.belongsToMany(Events, { through: User_Events, foreignKey: 'IdUser' })
+Events.belongsToMany(Users, { through: User_Events, foreignKey: 'IdEvent' })
 
 export default User_Events

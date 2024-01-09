@@ -25,4 +25,5 @@ const Users = sequelize.define('User', {
     timestamps: false
 })
 
+
 export default Users

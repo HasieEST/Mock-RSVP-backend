@@ -2,6 +2,11 @@ import { config } from 'dotenv'
 config()
 import express from 'express'
 import authenticateToken from './src/Authentication/authenticateToken.js'
+import sequelize from './src/Utils/sequalize.js'
+import User_Events from './src/Models/User_events.js'
+import Invitees from './src/Models/Invitees.js'
+import Users from './src/Models/Users.js'
+import Events from './src/Models/Events.js'
 
 
 import registerUser from './src/Authentication/registerUser.js'
@@ -18,8 +23,6 @@ import deleteEvent from './src/Queries/deleteEvent.js'
 import submitRSVP from './src/Queries/submitRSVP.js'
 import addModerator from './src/Queries/addModerator.js'
 import removeModerator from './src/Queries/removeModerator.js'
-import sequelize from './src/Utils/sequalize.js'
-
 
 
 const server = express()
@@ -58,6 +61,7 @@ server.post('/login', async (req, res) => {
 server.get('/upcoming', authenticateToken, async (req, res) => {
   try {
     const userID = await getUserID(req.user.username)
+    console.log(userID)
     const upcomingEvent = await getUpcomingEvent(userID.id)
     res.status(200).json(upcomingEvent)
   } catch (error) {
@@ -278,7 +282,9 @@ server.delete('/events/:eventID/removemoderator', authenticateToken, async (req,
   }
 })
 
-sequelize.sync({ alter: true }).then(() => {
+
+
+sequelize.sync({ alter: true }).then(()=>{
   app = server.listen(3006, () => {
     console.log('Server started on port 3006')
   })

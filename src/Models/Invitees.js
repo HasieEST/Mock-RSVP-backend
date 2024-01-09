@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize'
 import sequelize from '../Utils/sequalize.js'
+import Events from './Events.js'
 
 const Invitees = sequelize.define('Invitees', {
     idInvitee: {
@@ -34,5 +35,9 @@ const Invitees = sequelize.define('Invitees', {
     tableName: 'invitees',
     timestamps: false
 })
+
+
+Invitees.belongsTo(Events, { foreignKey: 'idEvent' })
+Events.hasMany(Invitees, { foreignKey: 'idEvent' })
 
 export default Invitees
