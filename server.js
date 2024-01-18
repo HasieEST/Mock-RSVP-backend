@@ -1,6 +1,8 @@
 import { config } from 'dotenv'
 config()
 import express from 'express'
+import cors from 'cors'
+
 
 import registerUser from './Authentication/registerUser.js'
 import loginUser from './Authentication/loginUser.js'
@@ -20,9 +22,15 @@ import getUserByEmail from './Utils/getUserByEmail.js'
 import addModerator from './Utils/addModerator.js'
 import removeModerator from './Utils/removeModerator.js'
 
-
 const server = express()
 
+const whitelist = ['http://localhost:3000']
+server.use(cors({
+  origin: whitelist,
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+}))
 server.use(express.json())
 
 server.post('/register', async (req, res) => {
@@ -254,17 +262,17 @@ server.delete('/events/:eventID/removemoderator', authenticateToken, async (req,
     const userExist = await getUserID(req.body.moderator)
     const userRole = await getUserRole(userExist.id)
 
-    if(userExist.success && eventExist.success && role.role === 1 && userRole.role !== 1) {
+    if (userExist.success && eventExist.success && role.role === 1 && userRole.role !== 1) {
       const result = await removeModerator(req.params.eventID, userExist.id)
       res.status(200).json(result)
     }
   } catch (error) {
     let statusCode = 500
-    if(error.message === 'Event not found' || error.message === 'No user is registered with this email' || error.message === 'There is no user with that username'){
+    if (error.message === 'Event not found' || error.message === 'No user is registered with this email' || error.message === 'There is no user with that username') {
       statusCode = 404
     }
-    if(error.message === 'Unauthorized user'){
-      if(typeof UserRole === 'undefined') {
+    if (error.message === 'Unauthorized user') {
+      if (typeof UserRole === 'undefined') {
         statusCode = 404
         error.message = 'This user is not affiliated with this event'
       } else {

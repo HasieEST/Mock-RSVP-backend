@@ -9,7 +9,7 @@ const getUpcomingEvent = async (user) => {
                         u.Username as host,
                         CASE WHEN ue.role in ('host', 'moderator') THEN 1 else 0 END AS isHostOrModerator
                     FROM
-                        event e
+                        events e
                     INNER JOIN
                         user_events ue ON e.IdEvent = ue.IdEvent
                     INNER JOIN

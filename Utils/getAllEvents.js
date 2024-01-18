@@ -9,14 +9,13 @@ const getAllEvents = async (user) => {
                         u.Username as host,
                         CASE WHEN ue.role in ('host', 'moderator') THEN 1 else 0 END AS isHostOrModerator
                     FROM
-                        event e
+                        events e
                     INNER JOIN
                         user_events ue ON e.IdEvent = ue.IdEvent
                     INNER JOIN
                         users u ON e.OrganizerID = u.idUsers
                     WHERE 
                         e.OrganizerID = ?`
-
         query(sql, [user], (error, results) => {
             if (error) {
                 reject({ success: false, message: 'Database query error' })
@@ -29,6 +28,7 @@ const getAllEvents = async (user) => {
                     role: event.isHostOrModerator
                 }));
                 if (events.length === 0) {
+                    console.log(events)
                     reject({ success: false, message: 'No events found for the user' })
                 } else {
                     resolve({ success: true, events })
