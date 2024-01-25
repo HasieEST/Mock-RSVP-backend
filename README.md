@@ -1,4 +1,6 @@
-# RSVP Web Application
+# RSVP Web Application 
+## Warning: Some of this README is still in editorial phase, as I am currently learning how to convert this application over to ORM style.
+
 
 This is a mock RSVP web application built with MySQL and Node.js.
 
