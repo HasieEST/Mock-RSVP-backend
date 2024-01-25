@@ -12,8 +12,7 @@ const updateFullEventDetails = async (eventID, fullDetails) => {
             Title: fullDetails.title,
             Date: fullDetails.date,
             Location: fullDetails.location,
-            Description: fullDetails.description,
-            OrganizerID: fullDetails.organizerID
+            Description: fullDetails.description
         })
 
         return { success: true, message: `Successfully updated ${fullDetails.title}` }

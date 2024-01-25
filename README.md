@@ -2,7 +2,8 @@
 
 This is a mock RSVP web application built with MySQL and Node.js.
 
-To access the frontend repository, visit [Frontend Repository URL](URL).
+To access the frontend repository, visit [Frontend Repository URL](https://github.com/ragnar1n/rsvp-front/tree/master).
+THIS IS ORM VERSION of the backend. FOR non-orm backend, please choose a branch named non-orm.
 
 ## Table of Contents
 
@@ -68,14 +69,7 @@ export JWT_KEY=your_jwt_secret_key
 
 ### Databse setup
 
-Set up the MySQL database and import the necessary schema. Refer to [schema.sql](schema.sql) for the database schema.
-
-To import the schema into your MySQL database:
-
-1. Open your MySQL Client.
-2. Create a new database (if not created already) using `CREATE DATABASE your_database_name;`.
-3. Use the created database: `USE your_database_name;`.
-4. Import the schema.sql file: `source /full/path/to/your/folder/schema.sql;` or `source schema.sql;` if schema file is in the current working directory of your MySQL session.
+This version of backend autogenerates all tables and associations itself upon inital launch, therefor you do not have to do anything beyond confirming that you have created .env file and filled every required key with correct values.
 
 ## Usage
 
@@ -85,7 +79,7 @@ Start the server using the following command:
 npm start
 ```
 
-This will run the server, allowing you to access the RSVP web application. Port by default is 3006, which can be changed in [server.js](server.js) near the end of the file.
+This will run the server, allowing you to access the RSVP web application. Port by default is 3006, which can be changed in [server.js](server.js) near at the start of the file.
 
 
 ## License 
